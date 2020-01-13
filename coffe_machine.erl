@@ -2,15 +2,19 @@
 
 -import(io, [format/2]).
 
--export([buy_coffe/1]).
+-export([buy_coffe/2]).
 
-buy_coffe(CoffeType) ->
+buy_coffe(CoffeType, CoinsValue) ->
 	CoffePrice = coffe_price(CoffeType),
-	buy_coffe(CoffeType, CoffePrice).
+	buy_coffe(CoffeType, CoffePrice, CoinsValue).
 
-buy_coffe(CoffeType, undefined) ->
+buy_coffe(CoffeType, undefined, _) ->
 	format("Sorry, coffe type '~w' doesn't exist!~n", [CoffeType]);
-buy_coffe(CoffeType, CoffePrice) ->
+buy_coffe(CoffeType, CoffePrice, CoinsValue)
+when CoffePrice > CoinsValue ->
+	format("Sorry, ~.2f$ already left to buy ~w~n",
+	[CoffePrice - CoinsValue, CoffeType]);
+buy_coffe(CoffeType, CoffePrice, _) ->
 	format("You just lost ~.2f$!~n", [CoffePrice]),
 	format("You got one ~w!~n", [CoffeType]).
 
