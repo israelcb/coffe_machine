@@ -4,8 +4,9 @@
 
 -export([buy_coffe/2]).
 
-buy_coffe(CoffeType, CoinsValue) ->
+buy_coffe(CoffeType, Coins) ->
 	CoffePrice = coffe_price(CoffeType),
+	CoinsValue = coins_value(Coins),
 	buy_coffe(CoffeType, CoffePrice, CoinsValue).
 
 buy_coffe(CoffeType, undefined, _) ->
@@ -31,3 +32,11 @@ coffe_price(latte_machiato) -> 1.50;
 coffe_price(red_eye) -> 2.00;
 coffe_price(cafe_au_lait) -> 1.50;
 coffe_price(_) -> undefined.
+
+coins_value(Coins) ->
+	coins_value(Coins, 0).
+
+coins_value([], CoinsValue) ->
+	CoinsValue;
+coins_value([CoinValue | Coins], CoinsValue) ->
+	coins_value(Coins, CoinsValue + CoinValue).
