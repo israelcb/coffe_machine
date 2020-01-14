@@ -1,11 +1,18 @@
 -module(coin).
 
+-define(COIN_VALUES,
+	[0.01, 0.05, 0.1, 0.25, 0.5]).
+
+-import(lists, [member/2]).
 -import(lists, [sort/1]).
 -import(lists, [reverse/1]).
 
 -export([exists/1]).
 -export([total_value/1]).
 -export([subtract/2]).
+
+exists(Coin) ->
+	member(Coin, ?COIN_VALUES).
 
 total_value(Coins) ->
 	total_value(Coins, 0).
@@ -14,13 +21,6 @@ total_value([], CoinsValue) ->
 	CoinsValue;
 total_value([CoinValue | Coins], CoinsValue) ->
 	total_value(Coins, CoinsValue + CoinValue).
-
-exists(0.01) -> true;
-exists(0.05) -> true;
-exists(0.1) -> true;
-exists(0.25) -> true;
-exists(0.5) -> true;
-exists(_) -> false.
 
 subtract(Coins, CoffePrice) ->
 	CoinsInDescOrder = reverse(sort(Coins)),
