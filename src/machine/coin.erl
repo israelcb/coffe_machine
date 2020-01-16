@@ -51,7 +51,6 @@ exchange_coin(Coin) ->
 	{value, MaxCoinValue} = search(
 		fun(C) -> C < CoinRoundedValue andalso CoinRoundedValue rem C == 0 end,
 		reverse(sort(map(fun(C) -> round(C * 100) end, ?COIN_VALUES)))),
-	io:format("Entrou -> ~w~n", [Coin / (MaxCoinValue / 100)]),
 	exchange_coin(MaxCoinValue / 100, round(Coin / (MaxCoinValue / 100)), []).
 
 exchange_coin(_, 0, Coins) ->
