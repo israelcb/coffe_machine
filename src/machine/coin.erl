@@ -47,13 +47,27 @@ exchange_first_coin([Coin | Coins]) ->
 	merge(exchange_coin(Coin), Coins).
 
 exchange_coin(Coin) ->
-	CoinRoundedValue = round(Coin * 100),
-	{value, MaxCoinValue} = search(
-		fun(C) -> C < CoinRoundedValue andalso CoinRoundedValue rem C == 0 end,
-		reverse(sort(map(fun(C) -> round(C * 100) end, ?COIN_VALUES)))),
-	exchange_coin(MaxCoinValue / 100, round(Coin / (MaxCoinValue / 100)), []).
+	MaxCoinValue = max_lower_coin_value(Coin),
+	exchange_coin(MaxCoinValue, round(Coin / MaxCoinValue), []).
 
 exchange_coin(_, 0, Coins) ->
 	Coins;
 exchange_coin(CoinValue, RemainingCoins, Coins) ->
 	exchange_coin(CoinValue, RemainingCoins - 1, [CoinValue | Coins]).
+
+max_lower_coin_value(TargetCoin) ->
+	CoinWeight = round(TargetCoin * 100),
+	max_lower_coin_value(CoinWeight, reverse(sort(?COIN_VALUES))).
+
+max_lower_coin_value(CoinWeight, [CoinValue | CoinValues]) ->
+	CurrentCoinWeight = round(CoinValue * 100),
+	IsMaxLowerCoinWeight = (
+		CoinWeight > CurrentCoinWeight
+		andalso CoinWeight rem CurrentCoinWeight == 0),
+	
+	case IsMaxLowerCoinWeight of
+		true ->
+			CoinValue;
+		_ ->
+			max_lower_coin_value(CoinWeight, CoinValues)
+	end.
