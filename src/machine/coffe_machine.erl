@@ -12,7 +12,7 @@
 -export([machine/0]).
 
 start() ->
-	register(machine, spawn(?MODULE, machine, [])),
+	register(?COFF, spawn(?MODULE, machine, [])),
 	format("Coffe machine is now on!~n").
 
 stop() ->
