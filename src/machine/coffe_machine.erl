@@ -23,6 +23,11 @@ machine(Coins) ->
 			machine(insert_coin(Coin, Coins));
 		{buy, CoffeType} ->
 			machine(buy(CoffeType, Coins));
+		{change} ->
+			format(
+				"You received a ~.2f$ change~n",
+				[coin:total_value(Coins)]),
+			machine([]);
 		{power_off} -> 
 			format("Coffe machine is now off!~n")
 	end.
