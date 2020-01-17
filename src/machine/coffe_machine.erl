@@ -1,7 +1,11 @@
 -module(coffe_machine).
 
+-include_lib("./../api.hrl").
+
 -import(io, [format/1]).
 -import(io, [format/2]).
+
+-record(coff__power_off, {}).
 
 -export([start/0]).
 -export([stop/0]).
@@ -12,23 +16,23 @@ start() ->
 	format("Coffe machine is now on!~n").
 
 stop() ->
-	machine ! {power_off}.
+	?SEND(#coff__power_off{}).
 
 machine() ->
 	machine([]).
 	
 machine(Coins) ->
 	receive
-		{insert_coin, Coin} ->
+		#coff__insert_coin{coin=Coin} ->
 			machine(insert_coin(Coin, Coins));
-		{buy, CoffeType} ->
+		#coff__buy{type=CoffeType} ->
 			machine(buy(CoffeType, Coins));
-		{change} ->
+		#coff__change{} ->
 			format(
 				"You received a ~.2f$ change~n",
 				[coin:total_value(Coins)]),
 			machine([]);
-		{power_off} -> 
+		#coff__power_off{} -> 
 			format("Coffe machine is now off!~n")
 	end.
 
